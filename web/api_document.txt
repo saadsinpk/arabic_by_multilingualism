@@ -1,0 +1,248 @@
+API DOCUMENT
+
+
+1) LOGIN
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/login?email=saad@mail.com&password=12345678
+
+	PARAMS
+	email	saad@mail.com
+	password	12345678
+
+
+2) Register
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/register
+
+	BODY formdata
+	first_name	as
+	last_name	12345678
+	email	sad@gmail.co
+	password	12345
+	password_confirmation	123456
+
+3) Logout
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/auth/logout
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+4)	USER MESSAGES
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/user_messages
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+5) 	USER LESSONS STATUS
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/user_lesson_status
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+6)	POST USER LESSONS STATUS
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/user_lesson_status
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY	formdata
+	lesson_id	1
+
+7)	POST USER LOGIN STATUS
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/add_user_login_status
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+8)	POST USER MESSAGES
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/add_user_messages
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY	formdata
+	message 	this is test message
+
+9)	POST USER QUESTION STATUS
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/add_user_question_status
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY	formdata
+	ques_id		1
+	select_ans	1
+	corrected_ans	2
+
+10)	POST USER REMIND LIST
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/add_user_remind_status?word_json=sadasd
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	PARAMS
+	word_json	sadasd
+
+	BODY 	formdata
+	word_json	sadasd
+
+11)	POST USER REVISION LIST
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/add_user_revision_status
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY 	formdata
+	word_json	sadasd
+
+12)	POST USER TRSANACTION
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/add_user_transactions
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY 	formdata
+	gateway_transaction		payemtnt
+	amount		500
+
+13) GET SINGLE QUESTION
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_question/1
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+14) GET SINGLE LEVEL
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_level/1
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+15) GET SINGLE UNIT
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_unit/1
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+16) GET SINGLE LESSION PLUS 
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_lession_plus/1
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+17) GET USER PROFILE
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/user-profile
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+18) UPDATE USER PROFILE
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/update_user
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY	formdata
+	first_name	natheer
+	last_name	kkk
+	email	saad_sinpk@yahoo.com
+	password 	123456
+
+19) POST FORGET PASSWORD
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/forgot_password
+
+	BODY	formdata
+	email	saad_sinpk@yahoo.com
+
+20) POST CHANGE PASSSWORD
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/change_password
+
+	BODY	formdata
+	old_password	123456
+	OR
+	user_otp	123456
+
+	new_password	12345678
+	confirm_password	12345678
+
+21) GET QUESTIONS LIST WITHOUT LESSONS
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_questions
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+22)	GET LEVEL LIST
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_levels
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+23)	GET UNIT LIST
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_units
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+24)	GET LESSION PLUS LIST
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_lession_plus
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+25) VERIFY OTP
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/verify_otp?user_otp=2327
+
+	PARAMS
+	user_otp	2327
+
+26)	UPDATE USER STATIC
+	POST
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/update_user_points
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+	BODY	formdata
+	user_points 	100
+	point_type	minus
+	lesson_complete		1
+	invisted_min	36.56
+	words_learned	5
+
+27) GET QUESTION BY LESSON
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/get_question_level/1
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+
+
+28) GET STATICS
+	GET
+	http://phpstack-539799-1919338.cloudwaysapps.com/api/statitics
+
+	AUTHORIZATION	Bearer Token
+	token 	<token>
+	
