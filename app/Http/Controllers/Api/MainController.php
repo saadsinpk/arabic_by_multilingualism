@@ -57,10 +57,12 @@ class MainController extends Controller
             foreach ($status as $key => $value) {
               $status[$key]->question_answer = json_decode($value->question_answer);
               if(!empty($value->image)) {
-                $status[$key]->image = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->image);
+                $status[$key]->image = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->image);
               }
               if(!empty($value->audio)) {
-                $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->audio);
+                $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->audio);
+              } else {
+                $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
               }
             }
             return response($status, 200);
@@ -128,7 +130,9 @@ class MainController extends Controller
                 $audio = '';
                 if(isset($tags_array[$match_value]->word_audio)) {
                   if(!empty($tags_array[$match_value]->word_audio)) {
-                    $audio = $tags_array[$match_value]->word_audio;
+                    $audio = rawurlencode($tags_array[$match_value]->word_audio);
+                  } else {
+                    $audio = 'no-sound.mp3';
                   }
                 }
                 // $content = str_replace("{{".$match_value."}}","{{".$tags_array[$match_value]->word_arabic."|".$tags_array[$match_value]->word_english."|".$tags_array[$match_value]->word_meaning."|audio:".$audio."}}",$content);
@@ -144,7 +148,9 @@ class MainController extends Controller
                 $audio = '';
                 if(isset($tags_array[$match_value]->word_audio)) {
                   if(!empty($tags_array[$match_value]->word_audio)) {
-                    $audio = $tags_array[$match_value]->word_audio;
+                    $audio = rawurlencode($tags_array[$match_value]->word_audio);
+                  } else {
+                    $audio = 'no-sound.mp3';
                   }
                 }
               }
@@ -153,9 +159,20 @@ class MainController extends Controller
             $status[$key]->lesson_content = '';
             $status[$key]->lesson_content_2 = '';
             $status[$key]->lesson_tags = json_decode($value->lesson_tags);
+            if(isset($status[$key]->lesson_tags)) {
+              foreach ($status[$key]->lesson_tags as $less_tag_key => $less_tag_value) {
+                if(isset($status[$key]->lesson_tags[$less_tag_key]->word_audio)) {
+                  $status[$key]->lesson_tags[$less_tag_key]->word_audio = rawurlencode($status[$key]->lesson_tags[$less_tag_key]->word_audio);
+                }
+              }
+            }
+
             $status[$key]->lesson_json_data = json_decode($value->lesson_json_data);
             if(!empty($value->lesson_audio)) {
-              $status[$key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->lesson_audio);
+              $status[$key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->lesson_audio);
+            } else {
+                $status[$key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
+
             }
           }
           $status = json_encode($status,JSON_UNESCAPED_UNICODE);
@@ -193,7 +210,7 @@ class MainController extends Controller
               if(isset($tags_array[$whbmv])) {
                 $audio = '';
                 if(isset($tags_array[$whbmv]->word_audio)) {
-                  $audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.urlencode($tags_array[$whbmv]->word_audio);
+                  $audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.rawurlencode($tags_array[$whbmv]->word_audio);
                 }
                 $content = str_replace($match_value,"<a href='".$whbmv."' style='color:#4472C4;mso-themecolor:accent1;mso-style-textoutline-type:none; mso-style-textoutline-outlinestyle-dpiwidth:0pt;mso-style-textoutline-outlinestyle-linecap: flat;mso-style-textoutline-outlinestyle-join:round;mso-style-textoutline-outlinestyle-pctmiterlimit: 0%;mso-style-textoutline-outlinestyle-dash:solid;mso-style-textoutline-outlinestyle-align: center;mso-style-textoutline-outlinestyle-compound:simple;mso-effects-shadow-color: #6E747A;mso-effects-shadow-alpha:43.0%;mso-effects-shadow-dpiradius:3.0pt; mso-effects-shadow-dpidistance:2.0pt;mso-effects-shadow-angledirection:5400000; mso-effects-shadow-align:center;mso-effects-shadow-pctsx:100.0%;mso-effects-shadow-pctsy: 100.0%;mso-effects-shadow-anglekx:0;mso-effects-shadow-angleky:0'>".$whbmv."</a>",$content);
               }
@@ -205,7 +222,9 @@ class MainController extends Controller
               $status[$key]->lesson_json_data = json_decode($value->lesson_json_data);
               foreach ($status[$key]->lesson_json_data as $json_lesson_key => $json_lesson_value) {
                 if(!empty($json_lesson_value->lesson_audio)) {
-                  $status[$key]->lesson_json_data[$json_lesson_key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($json_lesson_value->lesson_audio);
+                  $status[$key]->lesson_json_data[$json_lesson_key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($json_lesson_value->lesson_audio);
+                } else {
+                  $status[$key]->lesson_json_data[$json_lesson_key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
                 }
               }
             }
@@ -213,17 +232,23 @@ class MainController extends Controller
               $status[$key]->lesson_tags = json_decode($value->lesson_tags);
               foreach ($status[$key]->lesson_tags as $json_lesson_key => $json_lesson_value) {
                 if(!empty($json_lesson_value->word_audio)) {
-                  $status[$key]->lesson_tags[$json_lesson_key]->word_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.urlencode($json_lesson_value->word_audio);
+                  $status[$key]->lesson_tags[$json_lesson_key]->word_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.rawurlencode($json_lesson_value->word_audio);
+                } else {
+                  $status[$key]->lesson_tags[$json_lesson_key]->word_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
                 }
               }
             }
 
             if(!empty($value->lesson_audio)) {
-              $status[$key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.urlencode($value->lesson_audio);
+              $status[$key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.rawurlencode($value->lesson_audio);
+            } else {
+              $status[$key]->lesson_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
             }
             
             if(!empty($value->bulk_audio)) {
-              $status[$key]->bulk_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.urlencode($value->bulk_audio);
+              $status[$key]->bulk_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/lesson_audio/'.rawurlencode($value->bulk_audio);
+            } else {
+              $status[$key]->bulk_audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
             }
 
           }
@@ -314,12 +339,14 @@ class MainController extends Controller
           $status[$key]->question_answer = json_decode($value->question_answer);
           if(isset($value->image)) {
             if(!empty($value->image)) {
-              $status[$key]->image = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->image);
+              $status[$key]->image = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->image);
             }
           }
           if(isset($value->audio)) {
             if(!empty($value->audio)) {
-              $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->audio);
+              $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->audio);
+            } else {
+              $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
             }
           }
         }
@@ -338,12 +365,14 @@ class MainController extends Controller
             $status[$key]->question_answer = json_decode($value->question_answer);
             if(isset($value->image)) {
               if(!empty($value->image)) {
-                $status[$key]->image = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->image);
+                $status[$key]->image = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->image);
               }
             }
             if(isset($value->audio)) {
               if(!empty($value->audio)) {
-                $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.urlencode($value->audio);
+                $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/questions/'.rawurlencode($value->audio);
+              } else {
+                $status[$key]->audio = 'https://arabiclanguageapp.co.uk/admin/storage/app/no-sound.mp3';
               }
             }
           }
@@ -494,6 +523,26 @@ class MainController extends Controller
     }
 
 
+    public function getQuestionStartup(){
+      $user = JWTAuth::user();
+      $user_questions_answered = $user->user_questions_answered;
+      if($user_questions_answered == 1) {
+        return response(["status" => true], 200);
+      } else {
+        return response(["status" => false], 200);
+      }
+    }
+
+    public function postQuestionStartup(Request $request){
+      $user = JWTAuth::user();
+      $user_id = $user->id;
+      $user_Data = User::where('id', $user_id)->first();
+      $user_Data->user_questions_answered = $request->get('user_questions_answered');
+      $user_Data->save();
+      exit();
+    }
+
+
     /* get statitics */
 
     public function statitics(){
@@ -515,7 +564,7 @@ class MainController extends Controller
         if (User::where('id', $user_id)->exists()) {
           $user_data = User::where('id', $user_id)->get()->toJson(JSON_PRETTY_PRINT);
           $this->check_user($user_data);
-         $level = Levels::select('*')->where('level_min_marks', '<=', $user_points)->where('level_max_marks', '>=', $user_points)->orWhereNull('level_max_marks')->orderby('level_id','desc')->first();
+         $level = Levels::select('*')->where('level_min_marks', '<=', $user_points)->where('level_max_marks', '>=', $user_points)->orWhereNull('level_max_marks')->orderby('level_name','asc')->first();
          $user_id = JWTAuth::user()->id;
          
          if($level != null){

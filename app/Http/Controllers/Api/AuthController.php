@@ -118,20 +118,26 @@ class AuthController extends Controller
     		'first_name' => 'required|string|max:255',
     		'last_name' => 'required|string|max:255',
     		'email' => 'required|email|max:255|unique:users',
-    		'password' => 'required|string|min:6|confirmed',
+    		'password' => 'required|string|min:6',
     	]);
 
     	if($validator->fails()){
     		return response()->json($validator->errors()->toJson(), 400);
     	}
+        $level = DB::select("SELECT * FROM levels WHERE level_min_marks = '0'");
+        if(isset($level[0])) {
+            $level_id = $level[0]->level_id;
+        }
 
     	$user = User::create([
-    		'name' => $request->get('first_name').$request->get('last_name'),
+    		'name' => $request->get('first_name').' '.$request->get('last_name'),
     		'username' => $request->get('email'),
     		'email' => $request->get('email'),
     		'firstname' => $request->get('first_name'),
     		'lastname' => $request->get('last_name'),	
-    		'usergroup' => 2,
+            'usergroup' => 2,
+            'user_points' => 0,
+    		'user_level' => $level_id,
     		'password' => Hash::make($request->get('password')),
     	]);
     	$otp = $this->generateOTP();
@@ -400,7 +406,11 @@ class AuthController extends Controller
                 }
             }
         } else {
-            $name = '11';
+            $level = DB::select("SELECT * FROM levels WHERE level_min_marks = '0'");
+            if(isset($level[0])) {
+                $level_id = $level[0]->level_id;
+            }
+
             $user = User::create([
                 'name' => $name,
                 'username' => $email,
@@ -408,6 +418,8 @@ class AuthController extends Controller
                 'firstname' => $name,
                 'lastname' => '', 
                 'usergroup' => 2,
+                'user_points' => 0,
+                'user_level' => $level_id,
                 'password' => Hash::make('123456789'),
             ]);
             $users = User::where('email', '=', $email)->first();
@@ -438,7 +450,11 @@ class AuthController extends Controller
             }
         }
         else {
-            $name = '11';
+            $level = DB::select("SELECT * FROM levels WHERE level_min_marks = '0'");
+            if(isset($level[0])) {
+                $level_id = $level[0]->level_id;
+            }
+
             $user = User::create([
                 'name' => 'Apple User',
                 'username' => $email,
@@ -446,6 +462,8 @@ class AuthController extends Controller
                 'firstname' => 'Apple User',
                 'lastname' => '', 
                 'usergroup' => 2,
+                'user_points' => 0,
+                'user_level' => $level_id,
                 'password' => Hash::make('123456789'),
             ]);
             $users = User::where('email', '=', 'ahmed@mail.com')->first();

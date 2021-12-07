@@ -5,11 +5,10 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
-use App\Models\LessonQuestions;
+use App\Models\Questions;
 use Illuminate\Http\File;
-use App\Models\LessionPlus;
 
-class LessonQuestionsController extends Controller
+class QuestionsController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -28,31 +27,33 @@ class LessonQuestionsController extends Controller
      */
     public function index()
     {
-        return view('admin.lesson_questions.index');
+        return view('admin.questions.index');
     }
     public function create()
     {
-        $lessions = LessionPlus::get();
-        return view('admin.lesson_questions.add_question',compact('lessions'));
+        return view('admin.questions.add_question');
     }
-    public function store(request $request )
+    public function store(Request $request)
     {
-        // dd($request->all());
+        
         $json_data = array();
        $request->validate([
-            'question' => 'required:questions',
-            'question_tagline' => 'required|max:255',
+            'question' => 'required:questions'
         ]);
        
         $input = $request->all();
         if ($request->file('image') !=null ){
 
-        $custom_file_name = time().'-'.$request->file('image')->getClientOriginalName();
+        $file_extension = explode(".",$request->file('image')->getClientOriginalName());
+        $file_extension = end($file_extension);
+        $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
         $image = $request->file('image')->storeAs('questions',$custom_file_name);
         $input['image'] = $custom_file_name;
         }
         if ($request->file('audio') !=null){
-             $custom_file_name = time().'-'.$request->file('audio')->getClientOriginalName();
+            $file_extension = explode(".",$request->file('audio')->getClientOriginalName());
+            $file_extension = end($file_extension);
+            $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
             $audio = $request->file('audio')->storeAs('questions',$custom_file_name);
             $input['audio'] = $custom_file_name;
         }
@@ -75,44 +76,46 @@ class LessonQuestionsController extends Controller
                    }
             }
         }
+
         $input['question_answer'] = json_encode($json_data);
       
 
-        LessonQuestions::create($input);
+        Questions::create($input);
         \Session::flash('flash_message','successfully saved.');
-        // exit();
+        
        
-        return redirect()->route('lesson_questions.index');
+        return redirect()->route('questions.index');
 
    }
    public function edit($id)
     {
-        $question = LessonQuestions::findOrFail($id);
-        $lessions = LessionPlus::get();
-        return view('admin.lesson_questions.edit', compact('question','lessions'));
+        $question = Questions::findOrFail($id);
+        return view('admin.questions.edit', compact('question'));
         
     }
 
 
     public function update(Request $request, $id)
     {
-
-        $question = LessonQuestions::findOrFail($id);
+        // dd($request->all());
+        $question = Questions::findOrFail($id);
 
         $request->validate([
-            'question' => 'required',
-            'question_tagline' => 'required|max:255',
-            'question_marks' => 'required|numeric',
+            'question' => 'required'
         ]);
         $input = $request->all();
         if ($request->file('image')!=null){
 
-        $custom_file_name = time().'-'.$request->file('image')->getClientOriginalName();
+        $file_extension = explode(".",$request->file('image')->getClientOriginalName());
+        $file_extension = end($file_extension);
+        $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
         $image = $request->file('image')->storeAs('questions',$custom_file_name);
         $input['image'] = $custom_file_name;
         }
         if ($request->file('audio')!=null){
-             $custom_file_name = time().'-'.$request->file('audio')->getClientOriginalName();
+            $file_extension = explode(".",$request->file('audio')->getClientOriginalName());
+            $file_extension = end($file_extension);
+            $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
             $audio = $request->file('audio')->storeAs('questions',$custom_file_name);
             $input['audio'] = $custom_file_name;
         }
@@ -120,12 +123,7 @@ class LessonQuestionsController extends Controller
             foreach ($request->question_answer as $key => $value) {
                $json_data[$key]['question_answer'] = $value;
                $json_data[$key]['order_number'] = $request->order_number[$key];
-              
-              if(isset($request->question_corren_radio[$key])){
-                $json_data[$key]['question_corren_radio'] = 1;
-               }else{
-                $json_data[$key]['question_corren_radio'] = 0;
-               }
+               $json_data[$key]['question_corren_radio'] = $request->question_corren_radio[$key];
                
             }
         }
@@ -136,16 +134,16 @@ class LessonQuestionsController extends Controller
        
         $question->fill($input)->save();
         \Session::flash('flash_message','successfully updated.');
-        return redirect()->route('lesson_questions.index');
+        return redirect()->route('questions.index');
     }
 
 
     public function destroy($id)
     {
-        $question = LessonQuestions::findOrFail($id);
+        $question = Questions::findOrFail($id);
         $question->delete();
         \Session::flash('flash_message','successfully deleted.');
-        return redirect()->route('lesson_questions.index');
+        return redirect()->route('questions.index');
     }
    
 }

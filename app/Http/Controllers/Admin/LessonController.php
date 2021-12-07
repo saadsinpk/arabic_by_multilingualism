@@ -49,7 +49,11 @@ class LessonController extends Controller
         $basic_lession->lesson_sort = $request->lesson_sort;
 
         if ($request->file('bulk_audio')!=null){
-            $custom_file_name = time().'-'.$request->file('bulk_audio')->getClientOriginalName();
+
+            $file_extension = explode(".",$request->file('bulk_audio')->getClientOriginalName());
+            $file_extension = end($file_extension);
+            $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
             $audio = $request->file('bulk_audio')->storeAs('lesson_audio',$custom_file_name);
             $basic_lession->bulk_audio = $custom_file_name;
         }
@@ -66,7 +70,10 @@ class LessonController extends Controller
         if(!empty($request->file('lesson_audio'))){
         foreach($request->file('lesson_audio') as $key => $image)
             {
-                $custom_file_name = time().'-'.$image->getClientOriginalName();
+                $file_extension = explode(".",$image->getClientOriginalName());
+                $file_extension = end($file_extension);
+                $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
                 $audio = $image->storeAs('questions',$custom_file_name);
                 $json_data[$key]['lesson_audio'] = $custom_file_name;
                 
@@ -103,7 +110,10 @@ class LessonController extends Controller
             'lesson_title' => 'required',
         ]);
         if ($request->file('bulk_audio')!=null){
-            $custom_file_name = time().'-'.$request->file('bulk_audio')->getClientOriginalName();
+            $file_extension = explode(".",$request->file('bulk_audio')->getClientOriginalName());
+            $file_extension = end($file_extension);
+            $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
             $audio = $request->file('bulk_audio')->storeAs('lesson_audio',$custom_file_name);
             $input['bulk_audio'] = $custom_file_name;
         }
@@ -131,7 +141,10 @@ class LessonController extends Controller
         foreach($request->file('lesson_audio') as $key => $image)
             {
                 if(!file_exists( public_path().'/questions/'.$image)){
-                    $custom_file_name = time().'-'.$image->getClientOriginalName();
+                    $file_extension = explode(".",$image->getClientOriginalName());
+                    $file_extension = end($file_extension);
+                    $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
                     $audio = $image->storeAs('questions',$custom_file_name);
                 }
                 $json_data[$key]['lesson_audio'] = $custom_file_name;

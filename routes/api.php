@@ -81,4 +81,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
       Route::get('/get_lesson_plus', [MainController::class, 'getAllLession_pluses']);
       Route::get('/get_answers', [MainController::class, 'getAllAnswer']);
       Route::get('/statitics', [MainController::class, 'statitics']);
+
+      Route::get('/get_questions_startup', [MainController::class, 'getQuestionStartup']);
+      Route::post('/post_questions_startup', [MainController::class, 'postQuestionStartup']);
 });

@@ -34,7 +34,7 @@ class LoginController extends Controller
      * @return void
      */
     public function redirectTo(){
-        if(Auth::user()->user_ban == 1){
+        if(Auth::user()->user_ban == 1 AND Auth::user()->usergroup == 1){
              return '/home';
         }else{
             Auth::logout();

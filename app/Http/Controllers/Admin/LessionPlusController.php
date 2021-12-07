@@ -29,6 +29,46 @@ class LessionPlusController extends Controller
      */
     public function index()
     {
+        // $lession_plus = LessionPlus::select('lesson_id', 'lesson_tags')->get();
+        // foreach ($lession_plus as $key => $value) {
+        //     echo $value->lesson_id;
+        //     echo "<br>";
+
+        //     $update_lession_plus = LessionPlus::where('lesson_id', $value->lesson_id)->first();
+
+        //     $lesson_Tags = json_decode($value->lesson_tags);
+        //     if(is_array($lesson_Tags)) {
+        //         if(count($lesson_Tags) > 0) {
+        //             foreach ($lesson_Tags as $tags_key => $tags_value) {
+        //                 if(empty($tags_value->word_english)) {
+        //                     $lesson_Tags[$tags_key]->word_english = 'No Word';
+        //                 }
+        //                 if(empty($tags_value->word_meaning)) {
+        //                     $lesson_Tags[$tags_key]->word_meaning = 'No Meaning';
+        //                 }
+        //                 if(empty($tags_value->word_arabic)) {
+        //                     unset($lesson_Tags[$tags_key]);
+        //                 }
+        //             }
+        //             $lesson_Tags = array_values($lesson_Tags);
+        //             $packed = json_encode($lesson_Tags);
+
+        //             // echo "<pre>";
+        //             //     print_r($lesson_Tags);
+        //             // echo "</pre>";
+        //             // echo "<pre>";
+        //             //     print_r($value->lesson_tags);
+        //             // echo "</pre>";
+        //             // echo "<pre>";
+        //             //     print_r($packed);
+        //             // echo "</pre>";
+        //             // exit();
+        //             $update_lession_plus->lesson_tags = $packed;
+        //             $update_lession_plus->save();
+        //         }
+        //     }
+        // }
+        // exit();
         return view('admin.basic_plus_lession.index');
     }
     public function create()
@@ -41,7 +81,7 @@ class LessionPlusController extends Controller
         $request->validate([
             'lesson_title' => 'required'
         ]);
-        
+
         $basic_lession = new LessionPlus;
         $basic_lession->lesson_title = $request->lesson_title;
         $basic_lession->lesson_level = $request->lesson_level;
@@ -49,7 +89,11 @@ class LessionPlusController extends Controller
         $basic_lession->lesson_content = $request->lesson_content;
         $basic_lession->lesson_content_2 = $request->lesson_content_2;
         if ($request->file('lesson_audio')!=null){
-            $custom_file_name = time().'-'.$request->file('lesson_audio')->getClientOriginalName();
+
+            $file_extension = explode(".",$request->file('lesson_audio')->getClientOriginalName());
+            $file_extension = end($file_extension);
+            $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
             $audio = $request->file('lesson_audio')->storeAs('lesson_audio',$custom_file_name);
             $basic_lession->lesson_audio = $custom_file_name;
         }
@@ -65,9 +109,12 @@ class LessionPlusController extends Controller
         if(!empty($request->file('word_audio'))){
         foreach($request->file('word_audio') as $key => $image)
             {
-                $filename = $image->getClientOriginalName();
-                $audio = $image->storeAs('lesson_audio',$filename);
-                $json_data[$key]['word_audio'] = $filename;
+                $file_extension = explode(".",$image->getClientOriginalName());
+                $file_extension = end($file_extension);
+                $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
+                $audio = $image->storeAs('lesson_audio',$custom_file_name);
+                $json_data[$key]['word_audio'] = $custom_file_name;
                 
             }
         }
@@ -99,7 +146,11 @@ class LessionPlusController extends Controller
             'lesson_title' => 'required'
         ]);
         if ($request->file('lesson_audio')!=null){
-            $custom_file_name = time().'-'.$request->file('lesson_audio')->getClientOriginalName();
+
+            $file_extension = explode(".",$request->file('lesson_audio')->getClientOriginalName());
+            $file_extension = end($file_extension);
+            $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
             $audio = $request->file('lesson_audio')->storeAs('lesson_audio',$custom_file_name);
             $input['lesson_audio'] = $custom_file_name;
         }
@@ -121,10 +172,13 @@ class LessionPlusController extends Controller
             {
                 if(!file_exists( public_path().'lesson_audio/'.$image)){
                     
-                    $filename = $image->getClientOriginalName();
-                    $audio = $image->storeAs('lesson_audio',$filename);
+                    $file_extension = explode(".",$image->getClientOriginalName());
+                    $file_extension = end($file_extension);
+                    $custom_file_name = time().'-'.rand(999,9999).'.'.$file_extension;
+
+                    $audio = $image->storeAs('lesson_audio',$custom_file_name);
                 }
-                $json_data[$key]['word_audio'] = $filename;
+                $json_data[$key]['word_audio'] = $custom_file_name;
                 
             }
         }
